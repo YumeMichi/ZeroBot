@@ -26,7 +26,7 @@ func Type(type_ string) Rule {
 // PrefixRule check if the message has the prefix and trim the prefix
 func PrefixRule(prefixes ...string) Rule {
 	return func(event *Event, state State) bool {
-		if event.Message == nil || event.Message[0].Type != "text" { // 确保无空指针
+		if event.Message == nil || len(event.Message) == 0 || event.Message[0].Type != "text" { // 确保无空指针
 			return false
 		}
 		first := event.Message[0]
@@ -45,7 +45,7 @@ func PrefixRule(prefixes ...string) Rule {
 // SuffixRule check if the message has the suffix and trim the suffix
 func SuffixRule(suffixes ...string) Rule {
 	return func(event *Event, state State) bool {
-		if event.Message == nil { // 确保无空指针
+		if event.Message == nil || len(event.Message) == 0 { // 确保无空指针
 			return false
 		}
 		last := event.Message[len(event.Message)-1]
@@ -67,7 +67,7 @@ func SuffixRule(suffixes ...string) Rule {
 // CommandRule check if the message is a command and trim the command name
 func CommandRule(commands ...string) Rule {
 	return func(event *Event, state State) bool {
-		if event.Message == nil || event.Message[0].Type != "text" {
+		if event.Message == nil || len(event.Message) == 0 || event.Message[0].Type != "text" {
 			return false
 		}
 		first := event.Message[0]
