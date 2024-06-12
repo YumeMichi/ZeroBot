@@ -751,3 +751,39 @@ func (ctx *Ctx) SetMessageEmojiLike(messageID interface{}, emojiID rune) error {
 	}
 	return nil
 }
+
+// GetGroupNotice 获取群公告
+// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/cqhttp.md#%E8%8E%B7%E5%8F%96%E7%BE%A4%E5%85%AC%E5%91%8A
+func (ctx *Ctx) GetGroupNotice(groupID int64) gjson.Result {
+	return ctx.CallAction("_get_group_notice", Params{
+		"group_id": groupID,
+	}).Data
+}
+
+// GetThisGroupNotice 获取本群群公告
+func (ctx *Ctx) GetThisGroupNotice() gjson.Result {
+	return ctx.GetGroupNotice(ctx.Event.GroupID)
+}
+
+// SendGroupNotice 发送群公告
+// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/cqhttp.md#%E5%8F%91%E9%80%81%E7%BE%A4%E5%85%AC%E5%91%8A
+func (ctx *Ctx) SendGroupNotice(groupID int64, content string) APIResponse {
+	return ctx.CallAction("_send_group_notice", Params{
+		"group_id": groupID,
+		"content":  content,
+	})
+}
+
+// DeleteGroupNotice 删除群公告
+// https://github.com/Mrs4s/go-cqhttp/blob/master/docs/cqhttp.md#%E5%88%A0%E9%99%A4%E7%BE%A4%E5%85%AC%E5%91%8A
+func (ctx *Ctx) DeleteGroupNotice(groupID int64, noticeID string) APIResponse {
+	return ctx.CallAction("_del_group_notice", Params{
+		"group_id":  groupID,
+		"notice_id": noticeID,
+	})
+}
+
+// DeleteThisGroupNotice 获取本群群公告
+func (ctx *Ctx) DeleteThisGroupNotice(noticeID string) APIResponse {
+	return ctx.DeleteGroupNotice(ctx.Event.GroupID, noticeID)
+}
